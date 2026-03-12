@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Http\Requests\PostStoreRequest;
 
 class PostController extends Controller
 {
@@ -15,16 +16,16 @@ class PostController extends Controller
         ], status:200);
     }
 
-    public function create()
+    public function store(PostStoreRequest $request)
     {
-        $inputs = request()->all();
+        $inputs = $request->validated();
         $post = Post::create($inputs);
         return response()->json([
             'data' => $post
         ], status:201);
     }
 
-    public function read(Post $post)
+    public function show(Post $post)
     {
         return response()->json([
             'data' => $post
@@ -40,7 +41,7 @@ class PostController extends Controller
         ], status:200);
     }
 
-    public function delete(Post $post)
+    public function destroy(Post $post)
     {
         $post->delete();
        
