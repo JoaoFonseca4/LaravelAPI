@@ -5,40 +5,36 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Http\Requests\PostStoreRequest;
+use App\Http\Resources\PostResource;
 
 class PostController extends Controller
 {
     public function index()
     {
         $posts = Post::all();
-        return response()->json([
+        return PostResource::collection($posts);
+        /* return response()->json([
             'data' => $posts
-        ], status:200);
+        ], status:200); */
     }
 
     public function store(PostStoreRequest $request)
     {
         $inputs = $request->validated();
         $post = Post::create($inputs);
-        return response()->json([
-            'data' => $post
-        ], status:201);
+        return new PostResource($post);
     }
 
     public function show(Post $post)
     {
-        return response()->json([
-            'data' => $post
-        ], status:200);
+        return new PostResource($post); 
     }
 
-    public function update(Post $post)
+    public function update(Post $post, PostStoreRequest $request)
     {
-        $inputs = request()->all();
+        $inputs = $request->validated();
         $post->update($inputs);
-        return response()->json([
-            'data' => $post
-        ], status:200);
+        return new PostResource($post);  
     }
 
     public function destroy(Post $post)
