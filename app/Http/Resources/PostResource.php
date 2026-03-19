@@ -18,6 +18,14 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'body' => $this->body,
+            'comments' => CommentResource::collection($this->whenLoaded('comments')),
+            'secret' => $this->when(false, 'secret-value'),
+            $this->mergeWhen(true, function(){
+                return [
+                    'created_at' => $this->created_at,
+                    'updated_at' => $this->updated_at,
+                ];
+            }),
         ];
     }
 }
