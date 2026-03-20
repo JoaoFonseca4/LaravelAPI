@@ -6,12 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Http\Requests\PostStoreRequest;
 use App\Http\Resources\PostResource;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::paginate();
+        $posts = QueryBuilder::for(Post::class)
+        ->allowedFilters(
+            AllowedFilter::partial('title')
+        )
+        ->paginate();
         return PostResource::collection($posts);
     }
 
